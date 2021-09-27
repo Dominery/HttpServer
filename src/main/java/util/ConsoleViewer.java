@@ -1,4 +1,4 @@
-package Notice;
+package util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,11 +8,11 @@ import java.time.format.DateTimeFormatter;
  * @create 2021-09-25-15:07
  */
 public class ConsoleViewer {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd hh:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd hh:mm:ss");
     private static ConsoleViewer viewer = null;
     public synchronized void viewMessage(String message) {
         String time = formatter.format(LocalDateTime.now());
-        System.out.println(time+"-"+message);
+        System.out.println(time+"--"+message);
     }
     public static ConsoleViewer getInstance(){
         if(viewer ==null){

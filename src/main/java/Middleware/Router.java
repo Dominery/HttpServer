@@ -1,7 +1,7 @@
 package Middleware;
 
 import Context.Context;
-import Notice.ConsoleViewer;
+import util.ConsoleViewer;
 import Processor.Processor;
 import Context.ResponseHeader;
 

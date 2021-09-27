@@ -4,7 +4,6 @@ import util.ClientSocket;
 import util.Config;
 
 import java.io.File;
-import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -22,7 +21,7 @@ public class Context {
         localPath = parseLocalPath();
     }
     public String getRequest(){
-        return request.getRequest();
+        return new RequestInfo(client.getAddr(),request.getRequest()).toString();
     }
     public String getMethod(){
         return request.getMethod();
@@ -39,9 +38,6 @@ public class Context {
     public void send(Stream<byte[]> data){
         data.forEach(client::send);
         client.close();
-    }
-    public InetSocketAddress getAddr(){
-        return client.getAddr();
     }
     private String parseLocalPath() {return Config.SEARCH_DIR + getUrl().replace("/", File.separator);}
 }
