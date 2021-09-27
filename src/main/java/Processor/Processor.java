@@ -1,8 +1,8 @@
 package Processor;
 
+import Context.Context;
 import Context.Response;
 import util.ByteStream;
-import Context.URL;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  */
 public abstract class Processor {
     protected Pattern regex = Pattern.compile("");
-    public abstract Stream<byte[]> process(Response res, URL uri);
+    public abstract Stream<byte[]> process(Response res, Context context);
     public boolean match(String uriFile){
         return regex.matcher(uriFile).find();
     }

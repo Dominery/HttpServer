@@ -1,9 +1,7 @@
 package Context;
 
-import util.Config;
 import util.Utils;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +12,7 @@ import java.util.regex.Pattern;
  * @author suyu
  * @create 2021-09-25-10:25
  */
-public class URL {
+class URL {
     private final Map<String,String> queries;
     private String path = "/";
     public URL(String rawUri){
@@ -28,9 +26,6 @@ public class URL {
     }
     public String getUriPath(){
         return path;
-    }
-    public String getLocalPath(){
-        return Config.SEARCH_DIR + getUriPath().replace("/", File.separator);
     }
     private String match(String rawString,Pattern regex,String defaultResult){
         String result = defaultResult;

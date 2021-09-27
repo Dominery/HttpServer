@@ -1,8 +1,8 @@
 package Processor;
 
+import Context.Context;
 import Context.Response;
 import util.Config;
-import Context.URL;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -19,9 +19,9 @@ public class ImageProcessor extends Processor {
         regex = Pattern.compile(".(jpg|jpeg|png|gif)$");
     }
     @Override
-    public Stream<byte[]> process(Response res, URL uri) {
-        res.addAttr(Config.CONTENT_TYPE, String.format(Config.IMAGE_TYPE,getType(uri.getLocalPath())));
-        return getBody(new File(uri.getLocalPath()));
+    public Stream<byte[]> process(Response res, Context context) {
+        res.addAttr(Config.CONTENT_TYPE, String.format(Config.IMAGE_TYPE,getType(context.getLocalPath())));
+        return getBody(new File(context.getLocalPath()));
     }
 
     private String getType(String path){

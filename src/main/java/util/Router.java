@@ -1,6 +1,6 @@
 package util;
 
-import Context.URL;
+import Context.Context;
 import Notice.ConsoleViewer;
 import Processor.Processor;
 import Context.Response;
@@ -17,20 +17,20 @@ import java.util.stream.Stream;
  */
 public class Router {
     private final List<Processor> processors = new LinkedList<>();
-    public Stream<byte[]> push(URL uri){
+    public Stream<byte[]> push(Context context){
         Optional<Processor> optionalProcessor = processors.stream()
-                .filter(processor -> processor.match(uri.getUriPath()))
+                .filter(processor -> processor.match(context.getUrl()))
                 .findAny();
-        String path = uri.getLocalPath();
+        String path = context.getLocalPath();
         Response head;
         Stream<byte[]> body = Stream.empty();
         if(new File(path).exists() && optionalProcessor.isPresent()){
             head = new Response(200);
-            body=optionalProcessor.get().process(head,uri);
-            ConsoleViewer.getInstance().viewMessage("success load "+uri.getUriPath());
+            body=optionalProcessor.get().process(head, context);
+            ConsoleViewer.getInstance().viewMessage("success load "+ context.getUrl());
         }else{
             head = new Response(404);
-            ConsoleViewer.getInstance().viewMessage("not found "+uri.getUriPath());
+            ConsoleViewer.getInstance().viewMessage("not found "+ context.getUrl());
         }
         return Stream.concat(head.getBytes(),body);
     }

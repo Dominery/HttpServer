@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author suyu
  * @create 2021-09-24-17:23
  */
-public class Request {
+class Request {
     private final Map<String,String> attrs;
     private final String request;
     private URL url;
