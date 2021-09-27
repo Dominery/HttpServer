@@ -1,9 +1,7 @@
 package Middleware;
 
 import Context.Context;
-import util.ConsoleViewer;
 import Processor.Processor;
-import Context.ResponseHeader;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -22,17 +20,13 @@ public class Router implements Middleware{
                 .filter(processor -> processor.match(context.getUrl()))
                 .findAny();
         String path = context.getLocalPath();
-        ResponseHeader head;
         Stream<byte[]> body = Stream.empty();
         if(new File(path).exists() && optionalProcessor.isPresent()){
-            head = new ResponseHeader(200);
-            body=optionalProcessor.get().process(head, context);
-            ConsoleViewer.getInstance().viewMessage("success load "+ context.getUrl());
+            body=optionalProcessor.get().process(context);
         }else{
-            head = new ResponseHeader(404);
-            ConsoleViewer.getInstance().viewMessage("not found "+ context.getUrl());
+            context.setStatus(404);
         }
-        context.send(Stream.concat(head.getBytes(),body));
+        context.body(body);
     }
     public Router addProcessor(Processor processor){
         processors.add(processor);

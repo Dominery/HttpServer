@@ -11,13 +11,13 @@ import java.util.stream.Stream;
  * @author suyu
  * @create 2021-09-24-21:30
  */
-public class ResponseHeader {
+class Response {
     private final int status;
     private final Map<String,String> attrs = new HashMap<>();
-    public ResponseHeader(int status){
+    public Response(int status){
         this.status = status;
     }
-    public void addAttr(String key,String value){
+    public void setHeader(String key, String value){
         attrs.put(key.toLowerCase(),value);
     }
     public Stream<byte[]> getBytes(){
@@ -29,6 +29,9 @@ public class ResponseHeader {
         });
         result.add("\r\n".getBytes());
         return result.stream();
+    }
+    public int getStatus(){
+        return status;
     }
     private byte[] getHead(){
         String result = "HTTP/1.2 ";

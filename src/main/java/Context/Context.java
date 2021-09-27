@@ -13,31 +13,40 @@ import java.util.stream.Stream;
  */
 public class Context {
     private final ClientSocket client;
-    private final Request request;
+    private final Request req;
     private final String localPath;
+    private Response res = new Response(200);
     public Context(ClientSocket client){
         this.client = client;
-        request = Request.build(client.recv());
+        req = Request.build(client.recv());
         localPath = parseLocalPath();
     }
-    public String getRequest(){
-        return new RequestInfo(client.getAddr(),request.getRequest()).toString();
+    public String getReq(){
+        return new RequestInfo(client.getAddr(), req.getRequest()).toString();
     }
+    public String getRes(){return new ResponseInfo(getMethod(),getUrl(),getStatus()).toString();}
     public String getMethod(){
-        return request.getMethod();
+        return req.getMethod();
     }
     public Optional<String> query(String key){
-        return request.query(key);
+        return req.query(key);
     }
     public String getUrl(){
-        return request.getUrl();
+        return req.getUrl();
     }
     public String getLocalPath(){
         return localPath;
     }
-    public void send(Stream<byte[]> data){
-        data.forEach(client::send);
+    public void body(Stream<byte[]> data){
+        Stream.concat(res.getBytes(),data).forEach(client::send);
         client.close();
+    }
+    public void setStatus(int status){
+        res = new Response(status);
+    }
+    public int getStatus(){return res.getStatus();}
+    public void setResHeader(String key,String value){
+        res.setHeader(key,value);
     }
     private String parseLocalPath() {return Config.SEARCH_DIR + getUrl().replace("/", File.separator);}
 }

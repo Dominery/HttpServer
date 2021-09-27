@@ -28,7 +28,7 @@ public class App {
     }
     private ApplyMiddleware buildMiddleware(Router router){
         ApplyMiddleware.use((context,next)->{
-            ConsoleViewer.getInstance().viewMessage(context.getRequest());
+            ConsoleViewer.getInstance().viewMessage(context.getReq());
             next.run();
         });
         ApplyMiddleware.use((context, next)->{
@@ -36,7 +36,7 @@ public class App {
             next.run();
             Instant end = Instant.now();
             Duration between = Duration.between(start, end);
-            ConsoleViewer.getInstance().viewMessage(context.getMethod() + " -> " + context.getUrl() +" "+ between.toMillis() + " ms");
+            ConsoleViewer.getInstance().viewMessage(context.getRes()+ " "+ between.toMillis() + " ms");
         });
         ApplyMiddleware.use(router);
         return ApplyMiddleware.build();

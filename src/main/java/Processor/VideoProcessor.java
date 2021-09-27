@@ -1,7 +1,6 @@
 package Processor;
 
 import Context.Context;
-import Context.ResponseHeader;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -16,7 +15,7 @@ public class VideoProcessor extends Processor{
         regex = Pattern.compile(".(mp4)$");
     }
     @Override
-    public Stream<byte[]> process(ResponseHeader res, Context context) {
+    public Stream<byte[]> process(Context context) {
         return getBody(new File(context.getLocalPath()));
     }
 }
