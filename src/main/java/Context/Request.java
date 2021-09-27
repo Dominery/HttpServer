@@ -1,6 +1,7 @@
 package Context;
 
-import java.util.HashMap;
+import util.Utils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 public class Request {
     private final Map<String,String> attrs;
     private final String request;
-    private String url;
+    private URL url;
     private String method;
     private final Pattern headRegex = Pattern.compile("([^/]+)(/[^ ]*)");
     private Request(Map<String,String> attrs,String header){
@@ -29,11 +30,14 @@ public class Request {
         Matcher matcher = headRegex.matcher(request);
         if(matcher.find()) {
             method = matcher.group(1).trim();
-            url = matcher.group(2);
+            url = new URL(matcher.group(2));
         }
     }
     public String getUrl(){
-        return url;
+        return url.getUriPath();
+    }
+    public Optional<String> query(String key){
+        return url.getValue(key);
     }
     public String getMethod(){
         return method;
@@ -43,13 +47,7 @@ public class Request {
     }
     public static Request build(List<String> data){
         String header = data.remove(0);
-        Map<String,String> attrs = new HashMap<>();
-        data.stream()
-                .map(str -> str.split(":"))
-                .filter(attr -> attr.length >1)
-                .forEach(attr -> {
-                    attrs.put(attr[0].toLowerCase(), attr[1]);
-                });
+        Map<String,String> attrs = Utils.toMap(data.stream(),":");
         return new Request(attrs,header);
     }
 }

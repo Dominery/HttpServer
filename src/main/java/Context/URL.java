@@ -1,8 +1,10 @@
-package util;
+package Context;
+
+import util.Config;
+import util.Utils;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -13,13 +15,13 @@ import java.util.regex.Pattern;
  * @create 2021-09-25-10:25
  */
 public class URL {
-    private final Map<String,String> queries = new HashMap<>();
+    private final Map<String,String> queries;
     private String path = "/";
     public URL(String rawUri){
         Pattern pathRegex = Pattern.compile("^([^?]+)");
         path = match(rawUri, pathRegex,"/");
         Pattern queryRegex = Pattern.compile("\\?([^ ]+)");
-        generateQuery(match(rawUri, queryRegex,""));
+        queries  = generateQuery(match(rawUri, queryRegex,""));
     }
     public Optional<String> getValue(String value){
         return Optional.of(queries.get(value));
@@ -36,10 +38,7 @@ public class URL {
         if(matcher.find())result = matcher.group(1);
         return result;
     }
-    private void generateQuery(String queryString){
-        Arrays.stream(queryString.split("&"))
-                .map(query -> query.split("="))
-                .filter(strs->strs.length>1)
-                .forEach(strs -> queries.put(strs[0].toLowerCase(),strs[1]));
+    private Map<String,String> generateQuery(String queryString){
+        return Utils.toMap(Arrays.stream(queryString.split("&")),"=");
     }
 }

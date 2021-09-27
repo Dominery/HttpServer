@@ -2,7 +2,7 @@ package Processor;
 
 import Context.Response;
 import util.Config;
-import util.URL;
+import Context.URL;
 
 import java.io.File;
 import java.util.regex.Matcher;
