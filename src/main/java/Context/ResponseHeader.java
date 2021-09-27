@@ -11,10 +11,10 @@ import java.util.stream.Stream;
  * @author suyu
  * @create 2021-09-24-21:30
  */
-public class Response {
+public class ResponseHeader {
     private final int status;
     private final Map<String,String> attrs = new HashMap<>();
-    public Response(int status){
+    public ResponseHeader(int status){
         this.status = status;
     }
     public void addAttr(String key,String value){

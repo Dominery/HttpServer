@@ -1,15 +1,10 @@
 import Context.Context;
-import Context.RequestInfo;
-import Notice.ConsoleViewer;
-import Processor.*;
+import Middleware.ApplyMiddleware;
 import util.ClientSocket;
-import util.Config;
-import util.Router;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,17 +14,15 @@ import java.util.concurrent.Executors;
  */
 public class HttpServer implements AutoCloseable{
     private final ServerSocket server;
-    private final Router router;
-    private HttpServer(int port,Router router) throws IOException{
+    private final ApplyMiddleware middleware;
+    HttpServer(int port, ApplyMiddleware middleware) throws IOException{
         server = new ServerSocket(port);
-        this.router = router;
+        this.middleware = middleware;
     }
     private Runnable serve(ClientSocket client){
         return () -> {
             Context context = new Context(client);
-            ConsoleViewer.getInstance().viewMessage(new RequestInfo(client.getAddr(),context.getRequest()).toString());
-            router.push(context).forEach(client::send);
-            client.close();
+            middleware.compose(context);
         };
     }
     public void run(int nThreads){
@@ -48,28 +41,5 @@ public class HttpServer implements AutoCloseable{
     @Override
     public void close() throws IOException {
         server.close();
-    }
-    public static void main(String[] args) {
-        try{
-            Config.init();
-        }catch (Exception e){
-            System.out.println("error occurred in config");
-            return;
-        }
-        Router router = new Router();
-        router.addProcessors(Arrays.asList(
-                new HtmlProcessor(),
-                new CssProcessor(),
-                new JsProcessor(),
-                new ImageProcessor(),
-                new FontsProcessor(),
-                new VideoProcessor()
-        ));
-        try(HttpServer server = new HttpServer(Config.PORT,router)){
-            server.run(Config.THREADS);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
     }
 }

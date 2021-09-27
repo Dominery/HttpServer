@@ -1,7 +1,7 @@
 package Processor;
 
 import Context.Context;
-import Context.Response;
+import Context.ResponseHeader;
 import util.Config;
 
 import java.io.File;
@@ -19,7 +19,7 @@ public class ImageProcessor extends Processor {
         regex = Pattern.compile(".(jpg|jpeg|png|gif)$");
     }
     @Override
-    public Stream<byte[]> process(Response res, Context context) {
+    public Stream<byte[]> process(ResponseHeader res, Context context) {
         res.addAttr(Config.CONTENT_TYPE, String.format(Config.IMAGE_TYPE,getType(context.getLocalPath())));
         return getBody(new File(context.getLocalPath()));
     }

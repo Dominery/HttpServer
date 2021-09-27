@@ -1,9 +1,9 @@
-package util;
+package Middleware;
 
 import Context.Context;
 import Notice.ConsoleViewer;
 import Processor.Processor;
-import Context.Response;
+import Context.ResponseHeader;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -15,24 +15,24 @@ import java.util.stream.Stream;
  * @author suyu
  * @create 2021-09-24-21:05
  */
-public class Router {
+public class Router implements Middleware{
     private final List<Processor> processors = new LinkedList<>();
-    public Stream<byte[]> push(Context context){
+    public void go(Context context, Runnable next){
         Optional<Processor> optionalProcessor = processors.stream()
                 .filter(processor -> processor.match(context.getUrl()))
                 .findAny();
         String path = context.getLocalPath();
-        Response head;
+        ResponseHeader head;
         Stream<byte[]> body = Stream.empty();
         if(new File(path).exists() && optionalProcessor.isPresent()){
-            head = new Response(200);
+            head = new ResponseHeader(200);
             body=optionalProcessor.get().process(head, context);
             ConsoleViewer.getInstance().viewMessage("success load "+ context.getUrl());
         }else{
-            head = new Response(404);
+            head = new ResponseHeader(404);
             ConsoleViewer.getInstance().viewMessage("not found "+ context.getUrl());
         }
-        return Stream.concat(head.getBytes(),body);
+        context.send(Stream.concat(head.getBytes(),body));
     }
     public Router addProcessor(Processor processor){
         processors.add(processor);

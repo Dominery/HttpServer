@@ -1,7 +1,7 @@
 package Processor;
 
 import Context.Context;
-import Context.Response;
+import Context.ResponseHeader;
 import util.Config;
 
 import java.io.File;
@@ -17,7 +17,7 @@ public class JsProcessor extends Processor{
         regex = Pattern.compile(".js$");
     }
     @Override
-    public Stream<byte[]> process(Response res, Context context) {
+    public Stream<byte[]> process(ResponseHeader res, Context context) {
         res.addAttr(Config.CONTENT_TYPE,"text/javascript");
         return getBody(new File(context.getLocalPath()));
     }
