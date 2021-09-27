@@ -1,4 +1,4 @@
-package header;
+package Context;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,23 +13,33 @@ import java.util.regex.Pattern;
  */
 public class Request {
     private final Map<String,String> attrs;
-    private final String header;
-    private final Pattern headRegex = Pattern.compile("[^/]+(/[^ ]*)");
+    private final String request;
+    private String url;
+    private String method;
+    private final Pattern headRegex = Pattern.compile("([^/]+)(/[^ ]*)");
     private Request(Map<String,String> attrs,String header){
         this.attrs = attrs;
-        this.header = header;
+        this.request = header;
+        parseHead();
     }
     public Optional<String> getAttr(String key){
         return Optional.of(attrs.get(key.toLowerCase()));
     }
-    public String getUri(){
-        String result = "/";
-        Matcher matcher = headRegex.matcher(header);
-        if(matcher.find()) result =matcher.group(1);
-        return result;
+    private void parseHead(){
+        Matcher matcher = headRegex.matcher(request);
+        if(matcher.find()) {
+            method = matcher.group(1).trim();
+            url = matcher.group(2);
+        }
     }
-    public String getHeader(){
-        return header;
+    public String getUrl(){
+        return url;
+    }
+    public String getMethod(){
+        return method;
+    }
+    public String getRequest(){
+        return request;
     }
     public static Request build(List<String> data){
         String header = data.remove(0);

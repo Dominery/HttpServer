@@ -1,11 +1,6 @@
-package header;
+package Context;
 
-import util.Config;
-
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,17 +39,5 @@ public class Response {
         }
         result += "\r\n";
         return result.getBytes(StandardCharsets.UTF_8);
-    }
-
-    public static Response build(int status){
-        Response response = new Response(status);
-        try {
-            Files.lines(new File(Config.RESPONSE_CONFIG).toPath())
-                    .map(str -> str.split(":"))
-                    .forEach(strArr -> response.addAttr(strArr[0],strArr[1]));
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        return response;
     }
 }

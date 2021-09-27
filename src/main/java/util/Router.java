@@ -2,7 +2,7 @@ package util;
 
 import Notice.ConsoleViewer;
 import Processor.Processor;
-import header.Response;
+import Context.Response;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  */
 public class Router {
     private final List<Processor> processors = new LinkedList<>();
-    public Stream<byte[]> push(Uri uri){
+    public Stream<byte[]> push(URL uri){
         Optional<Processor> optionalProcessor = processors.stream()
                 .filter(processor -> processor.match(uri.getUriPath()))
                 .findAny();

@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  * @author suyu
  * @create 2021-09-25-10:25
  */
-public class Uri {
+public class URL {
     private final Map<String,String> queries = new HashMap<>();
     private String path = "/";
-    public Uri(String rawUri){
+    public URL(String rawUri){
         Pattern pathRegex = Pattern.compile("^([^?]+)");
         path = match(rawUri, pathRegex,"/");
         Pattern queryRegex = Pattern.compile("\\?([^ ]+)");

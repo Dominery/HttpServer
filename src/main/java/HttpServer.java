@@ -1,11 +1,11 @@
 import Notice.ConsoleViewer;
 import Processor.*;
-import header.Request;
-import header.RequestInfo;
+import Context.Request;
+import Context.RequestInfo;
 import util.ClientSocket;
 import util.Config;
 import util.Router;
-import util.Uri;
+import util.URL;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -28,8 +28,8 @@ public class HttpServer implements AutoCloseable{
     private Runnable serve(ClientSocket client){
         return () -> {
             Request request = Request.build(client.recv());
-            ConsoleViewer.getInstance().viewMessage(new RequestInfo(client.getAddr(),request.getHeader()).toString());
-            router.push(new Uri(request.getUri())).forEach(client::send);
+            ConsoleViewer.getInstance().viewMessage(new RequestInfo(client.getAddr(),request.getRequest()).toString());
+            router.push(new URL(request.getUrl())).forEach(client::send);
             client.close();
         };
     }

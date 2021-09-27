@@ -1,8 +1,8 @@
 package Processor;
 
-import header.Response;
+import Context.Response;
 import util.Config;
-import util.Uri;
+import util.URL;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -17,7 +17,7 @@ public class HtmlProcessor extends Processor {
         regex = Pattern.compile("/$|.html$");
     }
     @Override
-    public Stream<byte[]> process(Response res, Uri uri) {
+    public Stream<byte[]> process(Response res, URL uri) {
         res.addAttr(Config.CONTENT_TYPE,"text/html;charset=utf-8");
         String path = uri.getLocalPath();
         File file = path.endsWith(File.separator)?new File(path+Config.INDEX_PAGE):new File(path);

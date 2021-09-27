@@ -1,7 +1,7 @@
 package Processor;
 
-import header.Response;
-import util.Uri;
+import Context.Response;
+import util.URL;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -16,7 +16,7 @@ public class FontsProcessor extends Processor{
         regex = Pattern.compile(".(ttf|woff|woff2)$");
     }
     @Override
-    public Stream<byte[]> process(Response res, Uri uri) {
+    public Stream<byte[]> process(Response res, URL uri) {
         return getBody(new File(uri.getLocalPath()));
     }
 }

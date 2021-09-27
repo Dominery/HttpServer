@@ -1,8 +1,8 @@
 package Processor;
 
-import header.Response;
+import Context.Response;
 import util.Config;
-import util.Uri;
+import util.URL;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -17,7 +17,7 @@ public class CssProcessor extends Processor {
         regex = Pattern.compile(".css$");
     }
     @Override
-    public Stream<byte[]> process(Response res, Uri uri) {
+    public Stream<byte[]> process(Response res, URL uri) {
         res.addAttr(Config.CONTENT_TYPE,"text/css");
         return getBody(new File(uri.getLocalPath()));
     }
