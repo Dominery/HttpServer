@@ -39,6 +39,9 @@ public class App {
             ConsoleViewer.getInstance().viewMessage(context.getRes()+ " "+ between.toMillis() + " ms");
         });
         ApplyMiddleware.use(router);
+        ApplyMiddleware.on(e -> {
+           ConsoleViewer.getInstance().viewMessage(e.getMessage());
+        });
         return ApplyMiddleware.build();
     }
     public void run(){

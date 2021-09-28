@@ -5,6 +5,7 @@ import Context.Context;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author suyu
@@ -12,12 +13,17 @@ import java.util.List;
  */
 public class ApplyMiddleware {
     private static final List<Middleware> shareMiddlewares = new LinkedList<>();
+    private static Optional<ErrorHandler> errorHandler;
     private final List<Middleware> middlewares = new ArrayList<Middleware>();
     private ApplyMiddleware(){
         middlewares.addAll(shareMiddlewares);
     }
     public void compose(Context context){
-        dispatch(0,context);
+        try {
+            dispatch(0, context);
+        }catch (Exception e){
+            errorHandler.ifPresent(handler -> handler.handle(e));
+        }
     }
     private void dispatch(int i, Context context){
         if(i == middlewares.size())return;
@@ -29,6 +35,7 @@ public class ApplyMiddleware {
     public static void use(Middleware middleware){
         shareMiddlewares.add(middleware);
     }
+    public static void on(ErrorHandler handler){errorHandler = Optional.ofNullable(handler);}
     public static ApplyMiddleware build(){
         return new ApplyMiddleware();
     }

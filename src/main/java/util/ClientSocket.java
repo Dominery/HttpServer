@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,11 +19,6 @@ public class ClientSocket {
     private BufferedOutputStream bos;
     public ClientSocket(Socket socket){
         client = socket;
-        try {
-            client.setKeepAlive(false);
-        } catch (SocketException e) {
-            ConsoleViewer.getInstance().viewMessage("socket closed suddenly");
-        }
     }
     public void send(byte[] data){
         BufferedOutputStream bos = getOutputStream();
@@ -33,8 +27,8 @@ public class ClientSocket {
                 bos.write(data);
                 bos.flush();
             }catch (IOException e){
-                ConsoleViewer.getInstance().viewMessage("error occurred when send message " +
-                        "socket had been closed by browser suddenly");
+                throw new RuntimeException("error occurred when send message " +
+                        "socket had been closed by client suddenly");
             }
         }
     }
@@ -48,7 +42,7 @@ public class ClientSocket {
                     result.add(line);
                 }
             } catch (IOException exception) {
-                exception.printStackTrace();
+                throw new RuntimeException("error occurred when receiving data");
             }
         }
         return result;
@@ -68,7 +62,7 @@ public class ClientSocket {
             try{
                 bis = new BufferedReader(new InputStreamReader(client.getInputStream()));
             }catch (IOException e){
-                e.printStackTrace();
+                throw new RuntimeException("error occurred when getInputStream");
             }
         }
         return bis;
@@ -78,7 +72,7 @@ public class ClientSocket {
             try{
                 bos = new BufferedOutputStream(client.getOutputStream());
             }catch (IOException e){
-                e.printStackTrace();
+                throw new RuntimeException("error occurred when getOutputStream");
             }
         }
         return bos;

@@ -19,12 +19,10 @@ public abstract class Processor {
         return regex.matcher(uriFile).find();
     }
     protected Stream<byte[]> getBody(File file){
-        Stream<byte[]> body = Stream.empty();
         try {
-            body = new ByteStream().bytes(file);
+            return new ByteStream().bytes(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("error occurred when open file "+file.getName());
         }
-        return body;
     }
 }
