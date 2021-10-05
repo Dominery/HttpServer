@@ -20,6 +20,7 @@ public class Config {
     public static String IMAGE_TYPE = "image/%s";
     public static String CONTENT_LENGTH = "content-length";
     public static int PORT;
+    public static String IP;
     public static int THREADS;
 
     public static void init() throws IOException {
@@ -29,6 +30,7 @@ public class Config {
                 .map(line -> line.split("="))
                 .forEach(arrs -> configs.put(arrs[0].trim(),arrs[1].trim()));
         PORT = Integer.parseInt(configs.get("port"));
+        IP = configs.get("ip");
         THREADS = Integer.parseInt(configs.get("threads"));
         SEARCH_DIR = configs.get("searchDirectory");
         assert SEARCH_DIR != null;

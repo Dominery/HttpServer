@@ -3,6 +3,7 @@ import Middleware.ApplyMiddleware;
 import util.ClientSocket;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +18,10 @@ public class HttpServer implements AutoCloseable{
     private final ApplyMiddleware middleware;
     HttpServer(int port, ApplyMiddleware middleware) throws IOException{
         server = new ServerSocket(port);
+        this.middleware = middleware;
+    }
+    HttpServer(String ip,int port, ApplyMiddleware middleware) throws IOException{
+        server = new ServerSocket(port,50, InetAddress.getByName(ip));
         this.middleware = middleware;
     }
     private Runnable serve(ClientSocket client){

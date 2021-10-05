@@ -51,7 +51,7 @@ public class App {
             System.out.println("error occurred in config");
             return;
         }
-        try(HttpServer server = new HttpServer(Config.PORT,buildMiddleware(buildRouter()))){
+        try(HttpServer server = new HttpServer(Config.IP,Config.PORT,buildMiddleware(buildRouter()))){
             server.run(Config.THREADS);
         }catch (IOException e){
             e.printStackTrace();
