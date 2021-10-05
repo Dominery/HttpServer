@@ -16,8 +16,8 @@ public class JsProcessor extends Processor{
         regex = Pattern.compile(".js$");
     }
     @Override
-    public Stream<byte[]> process(Context context) {
+    public Stream<byte[]> process(Context context, String localPath) {
         context.setResHeader(Config.CONTENT_TYPE,"text/javascript");
-        return getBody(new File(context.getLocalPath()));
+        return getBody(new File(localPath));
     }
 }

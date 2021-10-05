@@ -16,8 +16,8 @@ public class CssProcessor extends Processor {
         regex = Pattern.compile(".css$");
     }
     @Override
-    public Stream<byte[]> process(Context context) {
+    public Stream<byte[]> process(Context context, String localPath) {
         context.setResHeader(Config.CONTENT_TYPE,"text/css");
-        return getBody(new File(context.getLocalPath()));
+        return getBody(new File(localPath));
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Config {
     public static String ROOT_DIR = System.getProperty("user.dir");
-    public static String SEARCH_DIR = ROOT_DIR+File.separator+"source";
+    public static String SEARCH_DIR;
     public static String INDEX_PAGE = "index.html";
     public static String CONFIG_DIR = ROOT_DIR + File.separator + "config" + File.separator + "server.config";
     public static String RESPONSE_CONFIG = CONFIG_DIR + File.separator + "response.config";

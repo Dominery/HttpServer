@@ -16,10 +16,9 @@ public class HtmlProcessor extends Processor {
         regex = Pattern.compile("/$|.html$");
     }
     @Override
-    public Stream<byte[]> process(Context context) {
+    public Stream<byte[]> process(Context context, String localPath) {
         context.setResHeader(Config.CONTENT_TYPE,"text/html;charset=utf-8");
-        String path = context.getLocalPath();
-        File file = path.endsWith(File.separator)?new File(path+Config.INDEX_PAGE):new File(path);
+        File file = localPath.endsWith(File.separator)?new File(localPath+Config.INDEX_PAGE):new File(localPath);
         return getBody(file);
     }
 

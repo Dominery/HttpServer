@@ -1,5 +1,5 @@
 import Middleware.ApplyMiddleware;
-import Middleware.Router;
+import Middleware.StaticRouter;
 import util.ConsoleViewer;
 import Processor.*;
 import util.Config;
@@ -14,9 +14,9 @@ import java.util.Arrays;
  * @create 2021-09-27-21:59
  */
 public class App {
-    private Router buildRouter(){
-        Router router = new Router();
-        router.addProcessors(Arrays.asList(
+    private StaticRouter buildRouter(){
+        StaticRouter staticRouter = new StaticRouter(Config.ROOT_DIR, Config.SEARCH_DIR);
+        staticRouter.addProcessors(Arrays.asList(
                 new HtmlProcessor(),
                 new CssProcessor(),
                 new JsProcessor(),
@@ -24,9 +24,9 @@ public class App {
                 new FontsProcessor(),
                 new VideoProcessor()
         ));
-        return router;
+        return staticRouter;
     }
-    private ApplyMiddleware buildMiddleware(Router router){
+    private ApplyMiddleware buildMiddleware(StaticRouter staticRouter){
         ApplyMiddleware.use((context,next)->{
             ConsoleViewer.getInstance().viewMessage(context.getReq());
             next.run();
@@ -38,7 +38,7 @@ public class App {
             Duration between = Duration.between(start, end);
             ConsoleViewer.getInstance().viewMessage(context.getRes()+ " "+ between.toMillis() + " ms");
         });
-        ApplyMiddleware.use(router);
+        ApplyMiddleware.use(staticRouter);
         ApplyMiddleware.on(e -> {
            ConsoleViewer.getInstance().viewMessage(e.getMessage());
         });

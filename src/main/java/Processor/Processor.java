@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  */
 public abstract class Processor {
     protected Pattern regex = Pattern.compile("");
-    public abstract Stream<byte[]> process(Context context);
+    public abstract Stream<byte[]> process(Context context, String localPath);
     public boolean match(String uriFile){
         return regex.matcher(uriFile).find();
     }

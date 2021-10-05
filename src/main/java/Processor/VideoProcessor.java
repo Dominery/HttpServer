@@ -15,7 +15,7 @@ public class VideoProcessor extends Processor{
         regex = Pattern.compile(".(mp4)$");
     }
     @Override
-    public Stream<byte[]> process(Context context) {
-        return getBody(new File(context.getLocalPath()));
+    public Stream<byte[]> process(Context context, String localPath) {
+        return getBody(new File(localPath));
     }
 }

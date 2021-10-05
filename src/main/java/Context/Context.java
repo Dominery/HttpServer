@@ -1,9 +1,7 @@
 package Context;
 
 import util.ClientSocket;
-import util.Config;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -14,12 +12,10 @@ import java.util.stream.Stream;
 public class Context {
     private final ClientSocket client;
     private final Request req;
-    private final String localPath;
     private Response res = new Response(200);
     public Context(ClientSocket client){
         this.client = client;
         req = Request.build(client.recv());
-        localPath = parseLocalPath();
     }
     public String getReq(){
         return new RequestInfo(client.getAddr(), req.getRequest()).toString();
@@ -34,9 +30,6 @@ public class Context {
     public String getUrl(){
         return req.getUrl();
     }
-    public String getLocalPath(){
-        return localPath;
-    }
     public void body(Stream<byte[]> data){
         Stream.concat(res.getBytes(),data).forEach(client::send);
         client.close();
@@ -48,5 +41,4 @@ public class Context {
     public void setResHeader(String key,String value){
         res.setHeader(key,value);
     }
-    private String parseLocalPath() {return Config.SEARCH_DIR + getUrl().replace("/", File.separator);}
 }

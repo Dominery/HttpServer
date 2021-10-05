@@ -18,9 +18,9 @@ public class ImageProcessor extends Processor {
         regex = Pattern.compile(".(jpg|jpeg|png|gif)$");
     }
     @Override
-    public Stream<byte[]> process(Context context) {
-        context.setResHeader(Config.CONTENT_TYPE, String.format(Config.IMAGE_TYPE,getType(context.getLocalPath())));
-        return getBody(new File(context.getLocalPath()));
+    public Stream<byte[]> process(Context context, String localPath) {
+        context.setResHeader(Config.CONTENT_TYPE, String.format(Config.IMAGE_TYPE,getType(localPath)));
+        return getBody(new File(localPath));
     }
 
     private String getType(String path){
