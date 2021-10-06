@@ -1,8 +1,9 @@
 import Middleware.ApplyMiddleware;
+import Middleware.ExceptionHttpStatus;
 import Middleware.StaticRouter;
-import util.ConsoleViewer;
 import Processor.*;
 import util.Config;
+import util.ConsoleViewer;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -38,9 +39,9 @@ public class App {
             Duration between = Duration.between(start, end);
             ConsoleViewer.getInstance().viewMessage(context.getRes()+ " "+ between.toMillis() + " ms");
         });
-        ApplyMiddleware.use(staticRouter);
+        ApplyMiddleware.use(staticRouter, ExceptionHttpStatus::notFound);
         ApplyMiddleware.on(e -> {
-           ConsoleViewer.getInstance().viewMessage(e.getMessage());
+           ConsoleViewer.getInstance().err(e.getMessage());
         });
         return ApplyMiddleware.build();
     }
@@ -48,7 +49,7 @@ public class App {
         try{
             Config.init();
         }catch (Exception e){
-            System.out.println("error occurred in config");
+            System.err.println("error occurred in config");
             return;
         }
         try(HttpServer server = new HttpServer(Config.IP,Config.PORT,buildMiddleware(buildRouter()))){

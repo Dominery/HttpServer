@@ -1,5 +1,6 @@
 package util;
 
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -10,9 +11,15 @@ import java.time.format.DateTimeFormatter;
 public class ConsoleViewer {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd hh:mm:ss");
     private static ConsoleViewer viewer = null;
-    public synchronized void viewMessage(String message) {
+    public void viewMessage(String message) {
+        show(System.out,message);
+    }
+    public void err(String message) {
+        show(System.err,message);
+    }
+    private synchronized void show(PrintStream print, String message){
         String time = formatter.format(LocalDateTime.now());
-        System.out.println(time+"--"+message);
+        print.println(time+"--"+message);
     }
     public static ConsoleViewer getInstance(){
         if(viewer ==null){

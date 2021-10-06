@@ -13,6 +13,12 @@ import java.util.stream.Stream;
  */
 class Response {
     private final int status;
+    private static final Map<Integer,String> statusInfo = new HashMap<>();
+    static {
+        statusInfo.put(200,"OK");
+        statusInfo.put(404,"Not Found");
+        statusInfo.put(500,"Internal Server Error");
+    }
     private final Map<String,String> attrs = new HashMap<>();
     public Response(int status){
         this.status = status;
@@ -34,12 +40,7 @@ class Response {
         return status;
     }
     private byte[] getHead(){
-        String result = "HTTP/1.2 ";
-        if(status>=200&&status<300){
-            result += "200 OK";
-        }else if(status>=400&&status<500){
-            result += "404 NoT Found";
-        }
+        String result = "HTTP/1.2 "+ status + statusInfo.getOrDefault(status,"");
         result += "\r\n";
         return result.getBytes(StandardCharsets.UTF_8);
     }

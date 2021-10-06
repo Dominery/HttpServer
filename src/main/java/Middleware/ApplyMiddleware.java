@@ -2,10 +2,7 @@ package Middleware;
 
 import Context.Context;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author suyu
@@ -13,10 +10,12 @@ import java.util.Optional;
  */
 public class ApplyMiddleware {
     private static final List<Middleware> shareMiddlewares = new LinkedList<>();
+    private static final Deque<Middleware> lastMiddlewares = new LinkedList<>();
     private static Optional<ErrorHandler> errorHandler;
     private final List<Middleware> middlewares = new ArrayList<Middleware>();
     private ApplyMiddleware(){
         middlewares.addAll(shareMiddlewares);
+        middlewares.addAll(lastMiddlewares);
     }
     public void compose(Context context){
         try {
@@ -34,6 +33,10 @@ public class ApplyMiddleware {
     }
     public static void use(Middleware middleware){
         shareMiddlewares.add(middleware);
+    }
+    public static void use(Middleware middleware,Middleware lastMiddleware){
+        shareMiddlewares.add(middleware);
+        lastMiddlewares.addFirst(lastMiddleware);
     }
     public static void on(ErrorHandler handler){errorHandler = Optional.ofNullable(handler);}
     public static ApplyMiddleware build(){

@@ -20,17 +20,21 @@ public class StaticRouter implements Middleware{
         staticDir = root + File.separator + searchDir;
     }
     public void go(Context context, Runnable next){
+        String path = getLocalPath(context.getUrl());
+        if(!new File(path).exists()){
+            next.run();
+            return;
+        }
         Optional<Processor> optionalProcessor = processors.stream()
                 .filter(processor -> processor.match(context.getUrl()))
                 .findAny();
-        String path = getLocalPath(context.getUrl());
-        Stream<byte[]> body = Stream.empty();
-        if(new File(path).exists() && optionalProcessor.isPresent()){
-            body=optionalProcessor.get().process(context, path);
+        if(optionalProcessor.isPresent()){
+            Stream<byte[]> body=optionalProcessor.get().process(context, path);
+            context.body(body);
         }else{
-            context.setStatus(404);
+            ExceptionHttpStatus.serverError(context,next);
+            throw new RuntimeException("no processor for "+context.getUrl());
         }
-        context.body(body);
     }
     public StaticRouter addProcessor(Processor processor){
         processors.add(processor);
