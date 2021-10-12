@@ -53,6 +53,7 @@ public class App {
             return;
         }
         try(HttpServer server = new HttpServer(Config.IP,Config.PORT,buildMiddleware(buildRouter()))){
+            System.out.println("App running at: http://"+Config.IP+":"+Config.PORT);
             server.run(Config.THREADS);
         }catch (IOException e){
             e.printStackTrace();
